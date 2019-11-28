@@ -14,8 +14,7 @@ public class MessageReceived extends ListenerAdapter {
     private static final String INPUT = "?1d6";
 
     String prefix = "?";
-//    String diceRegEx = "(\\?)(\\d*)(D)(\\d*)";
-    String diceRegEx = ".s";
+    String diceRegEx = "(\\?)(\\d*)(d)(\\d*)";
 
     @Override
     public void onReady(ReadyEvent event) {
@@ -33,11 +32,6 @@ public class MessageReceived extends ListenerAdapter {
 
         // Create a DicePattern object
         Pattern dicePattern = Pattern.compile(diceRegEx);
-        Matcher diceMatcher = dicePattern.matcher("g");
-
-        if(diceMatcher.matches()) {
-            System.out.println("yes!");
-        }
 
         if(!bot) {
 
@@ -50,7 +44,7 @@ public class MessageReceived extends ListenerAdapter {
 
                 //Regex Matcher
                 System.out.println(message.getContentDisplay().toLowerCase());
-//                Matcher diceMatcher = dicePattern.matcher(message.getContentDisplay().toLowerCase());
+                Matcher diceMatcher = dicePattern.matcher(message.getContentDisplay().toLowerCase());
 
                 if(message.getContentDisplay().toLowerCase().equals("who am i?")) {
                     textChannel.sendMessage("You are " + member.getEffectiveName()).queue();
@@ -130,20 +124,25 @@ public class MessageReceived extends ListenerAdapter {
                     textChannel.sendMessage("You rolled " + roll + "!").queue();
                 }
 
-                //Roll a custom dice
-//                else if(diceMatcher.matches()) {
-//                    System.out.println("mphka");
-//                    int numberOfDices = Integer.parseInt(diceMatch.group(1));
-//                    int diceValue = Integer.parseInt(diceMatch.group(3));
-//
-//                    int sum = 0;
-//
-//                    for (int i = 0; i < numberOfDices; i++) {
-//                        sum += (int)((Math.random()*((diceValue-1)+1))+1);
-//                    }
-//
-//                    textChannel.sendMessage("You rolled " + sum + "!").queue();
-//                }
+//              Roll a custom dice
+                else if(diceMatcher.find()) {
+                    System.out.println("mphka");
+
+                    int numberOfDices = Integer.parseInt(diceMatcher.group(2));
+                    int diceValue = Integer.parseInt(diceMatcher.group(4));
+
+                    System.out.println(diceMatcher.group(2));
+                    System.out.println(diceMatcher.group(4));
+
+
+                    int sum = 0;
+
+                    for (int i = 0; i < numberOfDices; i++) {
+                        sum += (int)((Math.random()*((diceValue-1)+1))+1);
+                    }
+
+                    textChannel.sendMessage("You rolled " + sum + "!").queue();
+                }
 
                 //Say a message
                 else if(message.getContentDisplay().toLowerCase().startsWith("?say")) {
